@@ -32,6 +32,23 @@ function App() {
         <h1>
           User Directory
         </h1>
+        <table>
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Jill</td>
+    <td>Smith</td>
+    <td>50</td>
+  </tr>
+  <tr>
+    <td>Eve</td>
+    <td>Jackson</td>
+    <td>94</td>
+  </tr>
+</table>
         <a
           className="App-link"
           href="https://reactjs.org"
