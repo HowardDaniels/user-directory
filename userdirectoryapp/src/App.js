@@ -48,6 +48,11 @@ function App() {
     <td>Jackson</td>
     <td>94</td>
   </tr>
+  <tr>
+    <td>Jonathan</td>
+    <td>Scott</td>
+    <td>24</td>
+  </tr>
 </table>
         <a
           className="App-link"
