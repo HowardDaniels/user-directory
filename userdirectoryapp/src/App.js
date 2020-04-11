@@ -1,105 +1,116 @@
 import React from 'react';
-// import logo from './logo.svg';
-import ReactDOM from 'react-dom';
-// import Table from './components/Table';
-// import tableData from './components/tableData';
 import './App.css';
 
-const tableData = [
-	{
-		name: 'David Scott',
-		email: 'dscott@developers.com',
-		id: 239249
-	}, {
-		name: 'Sandra Wilson',
-		email: 'swilson@developers.com',
-		id: 489022
-	}, {
-		name: 'Anthony Davis',
-		email: 'adavis@developers.com',
-		id: 892304
-	}, {
-		name: 'Wendy Armstrong',
-		email: 'warmstrong@developers.com',
-		id: 211033
-	}
-];
+const useSortableData = (items, config = null) => {
+  const [sortConfig, setSortConfig] = React.useState(config);
 
-const sortTypes = {
-	up: {
-		class: 'sort-up',
-		fn: (a, b) => a.id - b.id
-	},
-	down: {
-		class: 'sort-down',
-		fn: (a, b) => b.id - a.id
-	},
-	default: {
-		class: 'sort',
-		fn: (a, b) => a
-	}
+  const sortedItems = React.useMemo(() => {
+    let sortableItems = [...items];
+    if (sortConfig !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [items, sortConfig]);
+
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === 'ascending'
+    ) {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  return { items: sortedItems, requestSort, sortConfig };
+};
+
+const ProductTable = (props) => {
+  const { items, requestSort, sortConfig } = useSortableData(props.users);
+  const getClassNamesFor = (name) => {
+    if (!sortConfig) {
+      return;
+    }
+    return sortConfig.key === name ? sortConfig.direction : undefined;
+  };
+  return (
+    <table>
+      <caption>Users</caption>
+      <thead>
+        <tr>
+          <th>
+            <button
+              type="button"
+              onClick={() => requestSort('name')}
+              className={getClassNamesFor('name')}
+            >
+              Name
+            </button>
+          </th>
+          <th>
+            <button
+              type="button"
+              onClick={() => requestSort('email')}
+              className={getClassNamesFor('email')}
+            >
+              Email
+            </button>
+          </th>
+          <th>
+            <button
+              type="button"
+              onClick={() => requestSort('userID')}
+              className={getClassNamesFor('userID')}
+            >
+              User ID
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {items.map((item) => (
+          <tr key={item.id}>
+            <td>{item.name}</td>
+            <td>{item.email}</td>
+            <td>{item.userID}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+export default function App() {
+  return (
+    <div className="App">
+      <ProductTable
+        users={[
+          { id: 1, name: 'Arnold Smith', email: "asmith@developers.com", userID: 329840 },
+          { id: 2, name: 'Jane Williams', email: "jwilliams@developers.com", userID: 234221 },
+          { id: 3, name: 'Ujjal Singh', email: "usingh@developers.com", userID: 823192 },
+          { id: 4, name: 'Sandra Sanchez', email: "ssanchez@developers.com", userID: 193400 },
+          { id: 5, name: 'Vladimir Smirnov', email: "vsmirnov@developers.com", userID: 423419 },
+          { id: 6, name: 'Aisha Jefferson', email: "ajefferson@developers.com", userID: 661087 },
+		  { id: 7, name: 'Li Wong', email: "lwong@developers.com", userID: 180452 },
+		  { id: 8, name: 'Carter Jones', email: "cjones@developers.com", userID: 422984 },
+		  { id: 9, name: 'Lindsey Cohen', email: "lcohen@developers.com", userID: 904476 },
+		  { id: 10, name: 'Juan Alvarez', email: "jalvarez@developers.com", userID: 133092 },
+		  { id: 11, name: 'Miles DiSabatino', email: "mdisabatino@developers.com", userID: 102471 },
+		  { id: 12, name: 'Ashley Palmer', email: "apalmer@developers.com", userID: 455702 },
+		  { id: 13, name: 'Mohammad al-Farsi', email: "malfarsi@developers.com", userID: 448127 },
+		  { id: 14, name: 'Anna Fitzgerald', email: "afitzgerald@developers.com", userID: 231178 },
+        ]}
+      />
+    </div>
+  );
 }
-
-class Table extends React.Component {
-	state = {
-		currentSort: 'default'
-	}
-	
-	onSortChange = () => {
-		const { currentSort } = this.state;
-		let nextSort;
-		
-		if(currentSort === 'down') nextSort = 'up';
-		else if(currentSort === 'up') nextSort = 'default';
-		else if(currentSort === 'default') nextSort = 'down';
-		
-		this.setState({
-			currentSort: nextSort
-		})
-	}
-	
-	render() {
-		const { data } = this.props;
-		const { currentSort } = this.state;
-		
-		return ( data.length > 0 && (
-			<table className="text-left">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Email</th>
-						<th>
-							ID
-							<button onClick={this.onSortChange}>
-								<i className={`fas fa-${sortTypes[currentSort].class}`}></i>
-							</button>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					{[...data].sort(sortTypes[currentSort].fn).map(p => (
-						<tr>
-							<td>{p.name}</td>
-							<td>{p.email}</td>
-							<td>{p.id}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
-		))
-	}
-}
-
-const App = () => (
-	<div className="text-center">
-		<h4>User list.</h4>
-		<p>Click on the icon to sort the table.</p>
-		
-		<Table data={tableData} />
-		
-		<small>* Data gathered from <a href="https://www.theweek.co.uk/people/57553/top-billionaires-who-richest-person-world" target="_blank" rel="noopener noreferrer">theweek.co.uk</a></small>
-	</div>
-);
-
-
-export default App;
