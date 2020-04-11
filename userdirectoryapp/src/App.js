@@ -92,8 +92,8 @@ class Table extends React.Component {
 
 const App = () => (
 	<div className="text-center">
-		<h4>A list of top 10 richest billionaires.</h4>
-		<p>Click on the icon next to "Net Worth" to see the sorting functionality</p>
+		<h4>User list.</h4>
+		<p>Click on the icon to sort the table.</p>
 		
 		<Table data={tableData} />
 		
