@@ -1,5 +1,9 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Wrapper from "./components/Wrapper";
+import "./App.css";
 
 const useSortableData = (items, config = null) => {
   const [sortConfig, setSortConfig] = React.useState(config);
@@ -94,6 +98,11 @@ export default function App() {
   return (
     <div className="App">
 
+<Router>
+      <div>
+        <Navbar />
+        <Wrapper>
+
        <h1>Click on the buttons above each column to sort the table.</h1>
       
       <UserTable
@@ -114,6 +123,10 @@ export default function App() {
 		      { id: 14, name: 'Anna Fitzgerald', email: "afitzgerald@developers.com", userID: 231178 },
         ]}
       />
-    </div>
+        </Wrapper>
+        <Footer />
+      </div>
+</Router>
+</div>
   );
 }
