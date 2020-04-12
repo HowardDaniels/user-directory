@@ -35,7 +35,7 @@ const useSortableData = (items, config = null) => {
   return { items: sortedItems, requestSort, sortConfig };
 };
 
-const ProductTable = (props) => {
+const UserTable = (props) => {
   const { items, requestSort, sortConfig } = useSortableData(props.users);
   const getClassNamesFor = (name) => {
     if (!sortConfig) {
@@ -93,7 +93,8 @@ const ProductTable = (props) => {
 export default function App() {
   return (
     <div className="App">
-      <ProductTable
+       <h1>Click on the buttons above each column to sort the table.</h1>
+      <UserTable
         users={[
           { id: 1, name: 'Arnold Smith', email: "asmith@developers.com", userID: 329840 },
           { id: 2, name: 'Jane Williams', email: "jwilliams@developers.com", userID: 234221 },
